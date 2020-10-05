@@ -8,15 +8,16 @@ $.ajaxPrefilter(function (options) {
   // 在发起真正的 Ajax 请求之前，统一拼接请求的根路径
   options.url = `${rootUrl}/${options.url}`;
 
-
   // 全局权限校验的配置项
   options.complete = function (res) {
-    const {status, message} = res.responseJSON;
+    console.log(res);
+
+    const { status, message } = res.responseJSON;
     if (status === 1 && message === '身份认证失败！') {
       localStorage.removeItem('token');
       location.href = '/login.html';
     }
-  }
+  };
 
   // 如果请求头包含/my/说明是需要权限的接口，需要统一添加Authorization请求头
   if (options.url.includes('/my/')) {
@@ -24,5 +25,4 @@ $.ajaxPrefilter(function (options) {
       Authorization: localStorage.getItem('token'),
     };
   }
-  console.log(options);
 });
